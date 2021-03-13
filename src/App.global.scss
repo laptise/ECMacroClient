@@ -1,0 +1,319 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+body {
+  position: fixed;
+  background-color: rgb(31, 27, 36);
+  color: #eee;
+  height: 100vh;
+  width: 100%;
+  font-family: sans-serif;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+* {
+  user-select: none;
+  cursor: default;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  all: unset;
+  width: 100%;
+  display: block;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  font-size: 12px;
+  height: 24px;
+  padding: 0 10px;
+  width: 100%;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  transition: all 30ms;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  &:active {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+#container {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  #side-menu {
+    height: 100%;
+    background-color: rgba(90, 90, 90, 0.1);
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    span.menu-title {
+      background-color: rgba(0, 0, 0, 0.2);
+      padding: 5px 10px;
+      font-weight: bold;
+    }
+  }
+  #main-window {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    #console {
+      width: 100%;
+      margin-top: auto;
+      background: rgba(100, 100, 100, 0.2);
+      display: flex;
+      flex-direction: column;
+      > span {
+        padding: 2.5px 10px;
+      }
+      > textarea {
+        all: unset;
+        padding: 5px;
+        font-size: 12px;
+        background-color: rgba(0, 0, 0, 0.3);
+        cursor: text;
+        word-wrap: pre;
+        white-space: pre;
+        min-height: 150px;
+      }
+      #message-box {
+        padding: 10px;
+        height: 150px;
+        overflow-y: scroll;
+        span {
+          font-size: 12px;
+          &.err {
+            color: #c6001c;
+          }
+          &.info {
+            color: #00ffff;
+          }
+        }
+      }
+    }
+    #main {
+      .single-tool {
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: inline-flex;
+        padding: 10px;
+        flex-direction: column;
+        margin-right: 10px;
+        span.title {
+          font-size: 16px;
+        }
+        span.description {
+          font-size: 12px;
+        }
+        * {
+          cursor: pointer;
+        }
+        &:hover {
+          opacity: 0.8;
+        }
+        &:active {
+          opacity: 0.5;
+        }
+      }
+      div.flow-setter {
+        border: 1px solid #aaa;
+        min-height: 100px;
+        border-radius: 5px;
+      }
+    }
+  }
+  #work-flow {
+    min-width: 200px;
+    padding: 10px;
+    background-color: rgba(100, 100, 100, 0.1);
+  }
+  #screenshots {
+    .files-overview-descriptions {
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: bold;
+      display: flex;
+      padding-top: 5px;
+      padding-bottom: 10px;
+    }
+    table.file-list {
+      width: 100%;
+      th,
+      td {
+        font-weight: normal;
+        font-size: 12px;
+        text-align: left;
+      }
+      th {
+        font-weight: bold;
+      }
+      thead {
+        background-color: rgba(100, 100, 100, 0.3);
+      }
+      tbody {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      tr.single-file {
+        font-size: 13px;
+        cursor: pointer !important;
+        padding: 2.5px 0;
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  .single-window {
+    background-color: rgba(130, 130, 130, 0.1);
+    height: 100%;
+    .content {
+      padding: 0 10px;
+      .section:not(:first-of-type) {
+        border-top: 1px solid #555;
+      }
+    }
+  }
+  span.box-title {
+    display: block;
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  h3 {
+    font-size: 13px;
+    margin: 0;
+    margin: 10px 0;
+  }
+  h4 {
+    font-size: 12px;
+    margin: 0;
+  }
+
+  input {
+    all: unset;
+    background-color: rgba(100, 100, 100, 0.2);
+    margin: 5px 0;
+    font-size: 12px;
+    padding: 5px 10px;
+    transition: all 50ms;
+    cursor: text;
+    &:hover {
+      background-color: rgba(100, 100, 100, 0.3);
+    }
+    &:focus {
+      outline: 1px solid #80bdffbd;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    &.plaes-set-chrome {
+      outline: 1px solid #ff8080bd !important;
+      cursor: pointer;
+      background-color: rgba(100, 100, 100, 0.2) !important;
+    }
+  }
+  input[type="checkbox"] {
+    cursor: pointer;
+    position: relative;
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      opacity: 0;
+      transition: all 50ms;
+      background-color: rgb(207, 207, 207);
+    }
+    &:checked::before {
+      width: 7px;
+      height: 3px;
+      left: 2px;
+      top: 11px;
+      border-radius: 10px 0 0 10px;
+      transform: rotate(40deg);
+      opacity: 1;
+    }
+    &:checked::after {
+      width: 14px;
+      height: 3px;
+      border-radius: 0 10px 10px 0;
+      transform: rotate(-45deg);
+      opacity: 1;
+
+      left: 6px;
+      top: 10px;
+    }
+  }
+  .input-button {
+    display: flex;
+    height: 24px;
+    border-radius: 4px;
+    * {
+      box-sizing: content-box;
+    }
+    input {
+      flex: 1;
+      margin: 0;
+    }
+    button {
+      all: unset;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 0 10px;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+      &:active {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  label.form-label {
+    display: flex;
+    align-items: center;
+    span.label {
+      width: 100px;
+    }
+    input {
+      width: 100%;
+      margin-left: 10px;
+    }
+  }
+  .button-row {
+    display: flex;
+    button {
+      display: inline-flex;
+      width: initial;
+      background-color: rgba(255, 255, 255, 0.1);
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      &:active {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  .is-disabled {
+    cursor: not-allowed !important;
+    opacity: 0.3 !important;
+    pointer-events: none !important;
+  }
+}

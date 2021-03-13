@@ -1,0 +1,19 @@
+{
+  "name": "ec-macro-client-react",
+  "productName": "ec-macro-client-react",
+  "version": "0.1",
+  "description": "React sources of EC Macro Client with Electron",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "Yoonsoo Kim",
+    "email": "laptise@live.jp"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer-core": "^8.0.0"
+  }
+}
