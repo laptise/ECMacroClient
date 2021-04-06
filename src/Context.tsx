@@ -20,6 +20,7 @@ interface IAppContext {
   loginPage: string;
   loginInfo: LoginInfo;
   updateSetting: () => void;
+  runAt: Date | null;
 }
 
 export const appContext: IAppContext = {
@@ -37,6 +38,7 @@ export const appContext: IAppContext = {
     email: "",
     password: "",
   },
+  runAt: null,
   updateSetting() {
     const stringfied = JSON.stringify(appContext);
     ipcRenderer.send("update-config", stringfied);

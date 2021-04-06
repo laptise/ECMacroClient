@@ -1,80 +1,56 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AppContext, configFileRequester } from "../Context";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as Puppeteer from "puppeteer-core";
+import React, { useContext, useEffect } from "react";
+import { AppContext } from "../Context";
 
-interface ToolProps {
-  name: string;
-  description: string;
-  dragState: [JSX.Element, React.Dispatch<React.SetStateAction<JSX.Element>>];
-  // eslint-disable-next-line react/no-unused-prop-types
-  toolClass: ToolClass;
-}
-function Tool({ name, description, dragState }: ToolProps) {
-  const dragStart = (e: React.DragEvent<HTMLSpanElement>) => {
-    console.log(e);
-    console.log(dragState);
-  };
-  return (
-    <div draggable onDragStart={dragStart} className="single-tool">
-      <span className="title">{name}</span>
-      <span className="description">{description}</span>
-    </div>
-  );
-}
-
-class ToolClass {
-  id: number;
-
+class Task {
   name: string;
 
-  description: string;
+  action: (page: Puppeteer.Page) => Promise<any>;
 
-  constructor(id: number, name: string, descrption: string) {
-    this.id = id;
+  constructor(name: string, action: (page: Puppeteer.Page) => Promise<any>) {
     this.name = name;
-    this.description = descrption;
+    this.action = action;
   }
 }
-const toollist = [
-  new ToolClass(0, "Start at", "起動"),
-  new ToolClass(1, "Wait until", "指定時間までまつ"),
-];
 
 export default function Main() {
   const context = useContext(AppContext);
-  const { updateSetting } = context;
-  const [dragging, setDragging] = useState((null as unknown) as JSX.Element);
-  useEffect(() => {
-    configFileRequester();
-  }, []);
 
-  const dragEnter = (e: React.DragEvent<HTMLSpanElement>) => {
-    console.log(e.target);
-  };
+  const taskList = [
+    new Task("Go login page", async (page: Puppeteer.Page) => {
+      await page.goto(context.loginPage);
+      context.pushConsole("ログインページが表示されました。", "info");
+    }),
+    // new Task(""),
+  ];
+
+  async function run() {
+    const browser = await Puppeteer.launch({
+      executablePath: `${context.setting.chromePath}/Contents/MacOS/Google Chrome`,
+      headless: context.setting.headlessMode,
+    });
+    const page = await browser.newPage();
+    await taskList[0].action(page);
+    context.pushConsole(`ページが表示されました: ${context.loginPage}`, "info");
+    const loginForm = await page.$("form#loginForm");
+    if (loginForm) {
+      const loginInput = await loginForm.$("#loginInner_u");
+      const passwordInput = await loginForm.$("input#loginInner_p");
+      await loginInput?.type(context.loginInfo.email);
+      await passwordInput?.type(context.loginInfo.password);
+    }
+    await page.click("input.loginButton");
+    await page.waitForNavigation({ waitUntil: "networkidle0" });
+  }
+
+  function startApp() {
+    run();
+  }
+  useEffect(() => startApp(), []);
   return (
     <div id="main" className="single-window">
-      <span
-        aria-hidden
-        tabIndex={0}
-        role="button"
-        onClick={updateSetting}
-        className="box-title"
-      >
-        Main
-      </span>
-      <div style={{ padding: 10 }}>
-        <div className="tool-box" style={{ marginBottom: 10 }}>
-          {toollist.map((tool) => (
-            <Tool
-              key={tool.id}
-              toolClass={tool}
-              name={tool.name}
-              description={tool.description}
-              dragState={[dragging, setDragging]}
-            />
-          ))}
-        </div>
-        <div onDragEnter={dragEnter} className="flow-setter" />
-      </div>
+      da
     </div>
   );
 }

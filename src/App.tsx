@@ -11,8 +11,6 @@ import SideMenu from "./components/SideMenu";
 import "./App.global.scss";
 
 ipcRenderer.on("get-config-file-reply", (_, arg) => {
-  console.log(appContext);
-  console.log(arg);
   Object.assign(appContext, arg);
 });
 
@@ -25,7 +23,6 @@ ipcRenderer.on("update-config", (event, arg) => {
 export default function App() {
   return (
     <Router>
-      ≥
       <SideMenu />
       <div id="main-window">
         <AppContext.Provider value={appContext}>

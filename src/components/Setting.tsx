@@ -16,6 +16,9 @@ export default function Setting() {
   const [password, setPassword] = useState(loginInfo.password);
   const [chromePath, setChromePath] = useState(setting.chromePath);
   const [headlessMode, setHeadlessMode] = useState(setting.headlessMode);
+  const [screenshotPath, setScreenshotPath] = useState(
+    setting.screenshotDirectory
+  );
   const targetPageInputEvent = (e: React.FormEvent) => {
     const input = e.target as HTMLInputElement;
     const { value } = input;
@@ -110,7 +113,8 @@ export default function Setting() {
   };
   const getScreenshotPath = (event: any, arg: any) => {
     context.setting.screenshotDirectory = arg;
-    console.log(event);
+    setScreenshotPath(arg);
+    context.updateSetting();
   };
   useEffect(() => {
     configFileRequester();
@@ -118,9 +122,10 @@ export default function Setting() {
     setHeadlessMode(context.setting.headlessMode);
     setChromePath(context.setting.chromePath);
     ipcRenderer.on("app-path-reply", getAppPath);
-    ipcRenderer.on("get-screenshot-path", getScreenshotPath);
+    ipcRenderer.on("screenshot-path-reply", getScreenshotPath);
     return () => {
       ipcRenderer.removeListener("app-path-reply", getAppPath);
+      ipcRenderer.removeListener("screenshot-path-reply", getScreenshotPath);
     };
   }, []);
   return (
@@ -139,7 +144,7 @@ export default function Setting() {
             readOnly={isChecking}
             style={{ cursor: "pointer" }}
             value={
-              chromePath || "クリックしてGoogle Chromeをセットしてください"
+              screenshotPath || "クリックして画像保存先をセットしてください"
             }
           />
         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-array-index-key */
 import { ipcRenderer } from "electron";
@@ -7,12 +8,13 @@ import { AppContext, configFileRequester } from "../Context";
 import { AppConfig } from "../../model";
 
 export default function Screenshots() {
-  const [appPath, setAppPath] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const context = useContext(AppContext);
-  const screenshotFolder = `./screenshots/`;
+  const { setting } = context;
+  const [appPath, setAppPath] = useState(setting.screenshotDirectory);
+  const screenshotFolder = setting.screenshotDirectory;
   const [fileList, setFileList] = useState([] as string[]);
-  const [fileInfoList, setFileInfoList] = useState([] as any[]);
+  const [fileInfoList, setFileInfoList] = useState([] as fs.Stats[]);
   const [dataIsSet, setDataIsSet] = useState(false);
 
   function getFileInfo() {
@@ -24,9 +26,8 @@ export default function Screenshots() {
       setFileInfoList(data);
       setDataIsSet(true);
     };
-    fileList.forEach((file, index) => {
-      console.log(index);
-      fs.stat(`./screenshots/${file}`, (err, stat) => {
+    fileList.forEach((file) => {
+      fs.stat(`${screenshotFolder}/${file}`, (err, stat) => {
         if (err) throw err;
         const date = stat.birthtime as Date;
         Array.push(
@@ -41,11 +42,18 @@ export default function Screenshots() {
     });
   }
   function getFileList() {
-    fs.readdir(screenshotFolder, (err, files: string[]) => {
-      if (err) throw err;
-      setFileList(files);
-      if (fileList) getFileInfo();
-    });
+    try {
+      fs.readdir(screenshotFolder, (err, files: string[]) => {
+        if (err) throw err;
+        setFileList(
+          files.filter((file) => file.match(".png") || file.match(".PNG"))
+        );
+        console.log(fileList);
+        if (fileList) getFileInfo();
+      });
+    } catch {
+      window.alert("ファイルリスト取得に失敗しました。");
+    }
   }
 
   function getFiles() {
@@ -78,10 +86,16 @@ export default function Screenshots() {
           <tbody>
             {dataIsSet &&
               fileList.map((file: string, index: number) => (
-                <tr key={index} className="single-file">
+                <tr
+                  key={index}
+                  className="single-file"
+                  onClick={() => {
+                    ipcRenderer.send("view-img");
+                  }}
+                >
                   <td>{index + 1}</td>
                   <td>{file}</td>
-                  <td>{fileInfoList[index].birth}</td>
+                  <td>{(fileInfoList[index] as any).birth}</td>
                   <td>
                     {Math.floor(
                       fileInfoList[index].size / 1000

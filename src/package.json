@@ -1,7 +1,7 @@
 {
   "name": "ec-macro-client-react",
   "productName": "ec-macro-client-react",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "React sources of EC Macro Client with Electron",
   "main": "./main.prod.js",
   "author": {
